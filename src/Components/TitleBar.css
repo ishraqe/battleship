@@ -1,0 +1,8 @@
+.battleship__titlebar {
+    position: absolute;
+    width: 100vw;
+    height: 40px;
+    background-color: #000000;;
+    left: 0px;
+    top: 0px;
+}

@@ -25,12 +25,12 @@ const Axis = ({ direction = 'row' }) => {
                 setAxisLabels(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']);
             }
         }
-    });
+    }, []);
 
     return (
         <div ref={axisRef} className="battleship__axis">
-            {axisLabels.map(label => {
-                return <AxisItem label={label} />
+            {axisLabels.map((label, index) => {
+                return <AxisItem key={`axis_label_${index}`} label={label} />
             })}
         </div>
     )

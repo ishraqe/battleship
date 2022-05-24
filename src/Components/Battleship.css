@@ -1,5 +1,15 @@
 .battleship__stage {
     position: absolute;
+    width: 900px;
+    height: 700px;
+    left: 0px;
+    top: 0px;
+}
+
+.battleship__content {
+    position: absolute;
+    width: 800px;
+    height: 650px;
     left: 50px;
     top: 50px;
 }

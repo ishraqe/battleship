@@ -17,9 +17,9 @@ const Board = () => {
     ];
     return (
         <div className="battleship__board">
-            {board.map(row => {
-                return row.map(square => {
-                    return <BoardSquare />
+            {board.map((row, rowIndex) => {
+                return row.map((square, columnIndex) => {
+                    return <BoardSquare key={`cell_${rowIndex}_${columnIndex}`} />
                 })
             })}
         </div>
