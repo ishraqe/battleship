@@ -1,0 +1,35 @@
+{
+    "name": "battleship_challenge",
+    "version": "0.0.1",
+    "private": true,
+    "description": "LeQuest advanced code challenge",
+    "scripts": {
+        "start": "node_modules/.bin/webpack serve --hot --config webpack.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:dfeucht/LeQuestCodeChallengeAdv.git"
+    },
+    "author": "LeQuest",
+    "license": "UNLICENSED",
+    "devDependencies": {
+        "@babel/cli": "7.14.8",
+        "@babel/core": "7.15.8",
+        "@babel/eslint-parser": "7.15.8",
+        "@babel/preset-env": "7.15.8",
+        "@babel/preset-react": "7.14.5",
+        "babel-loader": "8.2.2",
+        "babel-preset-minify": "0.5.1",
+        "css-loader": "6.4.0",
+        "source-map-loader": "3.0.0",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.72.1",
+        "webpack-cli": "^4.9.2",
+        "webpack-dev-server": "^4.9.0"
+    },
+    "dependencies": {
+        "prop-types": "^15.8.1",
+        "react": "17.0.2",
+        "react-dom": "17.0.2"
+    }
+}

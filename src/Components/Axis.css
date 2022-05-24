@@ -1,0 +1,15 @@
+.battleship__axis {
+    --axis-direction: row;
+    --axis-width: 0px;
+    --axis-height: 0px;
+    --axis-left: 30px;
+    --axis-top: 0px;
+    top: var(--axis-top);
+    left: var(--axis-left);
+    position: absolute;
+    display: flex;
+    flex-direction: var(--axis-direction);
+    justify-content: space-between;
+    width: var(--axis-width);
+    height: var(--axis-height);
+}

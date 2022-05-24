@@ -1,0 +1,13 @@
+.battleship__board {
+    --board-rows: 10;
+    --board-columns: 10;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 500px;
+    height: 500px;
+    border: 1px solid #000000;
+    display: grid;
+    grid-template-columns: repeat(var(--board-columns), 1fr);
+    grid-template-rows: repeat(var(--board-rows), 1fr);
+}

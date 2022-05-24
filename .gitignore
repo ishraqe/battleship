@@ -1,0 +1,3 @@
+#Editor ignores
+node_modules/
+yarn.lock
