@@ -1,6 +1,4 @@
-# LeQuestCodeChallengeAdv
-Code Challenge for FE Dev applicants at LeQuest
-
+# Battleship!
 Build a simple React-based version of the game Battleship. 
 
 In Battleship we have a board which is a 10x10 grid, where the rows are labeled with a letter (A-J), and the columns with a number (1-10). There are different types of ships which each take up a different number of spaces on this grid, and the number of spaces a ship takes up is equivalent to how many hits the ship can take before sinking. So for a battleship, it takes up 4 spaces on the board, and can be hit 4 times before sinking. The players place their ships on the board in a random configuration, and then in turns, announce a square (for instance C3) where they will attack. If any of the opponent's ships are on that square, that ship will take one hit. Once a ship has a hit on each space it takes up, it will sink. Once a player's ships are all sunk, they lose. 
@@ -15,8 +13,7 @@ We give you a basic board setup and an 'inventory' of 4 ships as follows for you
 
 * 1 destroyer: size 2 spaces for hits 
 
- 
-What you should do: 
+## What you should do: 
 
 * Implement a means to display your inventory (visuals for ships can be very simple, just solid rectangles with the appropriate size based on how many spaces they take up). 
 
@@ -36,15 +33,13 @@ What you should do:
 
 * Implement a means to determine game over when all ships of one player have been sunk. 
 
-
-Optional Extras: 
+## Optional Extras: 
 
 * Implement multiple difficulty levels for the 'computer' player 
 
 * Implement multiplayer functionality between two clients 
 
-
-How to get started:
+## How to get started:
 
 * Fork this repository to your own GitHub account
 * Implement as many of the things listed above as you can
