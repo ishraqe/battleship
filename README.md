@@ -36,10 +36,18 @@ What you should do:
 
 * Implement a means to determine game over when all ships of one player have been sunk. 
 
- 
 
 Optional Extras: 
 
 * Implement multiple difficulty levels for the 'computer' player 
 
 * Implement multiplayer functionality between two clients 
+
+
+How to get started:
+
+* Fork this repository to your own GitHub account
+* Implement as many of the things listed above as you can
+* Keep in mind why you decided to implement things a certain way, or to prioritize one feature over another
+* Push your changes to the forked repository
+* After 2 days, we will schedule a short review session to discuss your solution

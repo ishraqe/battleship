@@ -1,0 +1,20 @@
+{
+    "inventory": [
+        {
+            "name": "carrier",
+            "size": 5
+        },
+        {
+            "name": "battleship",
+            "size": 4
+        },
+        {
+            "name": "cruiser",
+            "size": 3
+        },
+        {
+            "name": "destroyer",
+            "size": 2
+        }
+    ]
+}
