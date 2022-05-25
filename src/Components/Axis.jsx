@@ -30,7 +30,7 @@ const Axis = ({ direction = 'row' }) => {
     return (
         <div ref={axisRef} className="battleship__axis">
             {axisLabels.map((label, index) => {
-                return <AxisItem key={`axis_label_${index}`} label={label} />
+                return <AxisItem key={`axis_label_${label}`} label={label} />
             })}
         </div>
     )
