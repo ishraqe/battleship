@@ -53,3 +53,4 @@ We give you a basic board setup and an 'inventory' of 4 ships as follows for you
 * Implement as many of the things listed above as you can
 * Keep in mind why you decided to implement things a certain way, or to prioritize one feature over another
 * Push your changes to the forked repository
+* Notify us that the code is ready. We will take a quick look at it and then schedule a discussion with you
