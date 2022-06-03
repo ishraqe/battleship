@@ -1,4 +1,12 @@
-# Battleship!
+# Challenge Scope
+The purpose of this code challenge is to look at how you approach solving a problem. We give a rather large challenge with some complexity so that we can see how you approach application design.
+
+This code challenge is not an examination. You will not be rejected if you do not finish everything or if not everything works properly. This code challenge is a tool for discussion. We want to know your
+thought processes, design choices, and how you would look at planning of a development project. If not everything is finished, we can also discuss together how you would think to proceed from where you left off. 
+
+Spend 6-8 hours (of course if you want to spend extra to make sure everthing is finished, that is fine also) to implement what you can, and we will have a discussion together after.
+
+## Battleship!
 Build a simple React-based version of the game Battleship. Introduce other libraries for state management, styling, etc as you see necessary.
 
 In Battleship we have a board which is a 10x10 grid, where the rows are labeled with a letter (A-J), and the columns with a number (1-10). There are different types of ships which each take up a different number of spaces on this grid, and the number of spaces a ship takes up is equivalent to how many hits the ship can take before sinking. So for a battleship, it takes up 4 spaces on the board, and can be hit 4 times before sinking. The players place their ships on the board in a random configuration, and then in turns, announce a square (for instance C3) where they will attack. If any of the opponent's ships are on that square, that ship will take one hit. Once a ship has a hit on each space it takes up, it will sink. Once a player's ships are all sunk, they lose. 
@@ -45,4 +53,3 @@ We give you a basic board setup and an 'inventory' of 4 ships as follows for you
 * Implement as many of the things listed above as you can
 * Keep in mind why you decided to implement things a certain way, or to prioritize one feature over another
 * Push your changes to the forked repository
-* After 2 days, we will schedule a short review session to discuss your solution
