@@ -50,7 +50,7 @@ We give you a basic board setup and an 'inventory' of 4 ships as follows for you
 ## How to get started:
 
 * Fork this repository to your own GitHub account
-* Implement as many of the things listed above as you can
-* Keep in mind why you decided to implement things a certain way, or to prioritize one feature over another
+* Implement as many of the things listed above as you can in 6-8 hours time
+* Keep in mind why you decided to implement things a certain way, or to prioritize one feature over another - this is important
 * Push your changes to the forked repository
 * Notify us that the code is ready. We will take a quick look at it and then schedule a discussion with you
