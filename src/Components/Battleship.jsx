@@ -49,7 +49,24 @@ const Battleship = () => {
             ocupiedBlocks.push(`${square.x}${square.y + index}`);
           });
         }
+        let isPlaceTaken = false;
 
+        if (playerDeployedShips && playerDeployedShips.length > 0) {
+          playerDeployedShips.forEach((ship) => {
+            ship.ocupiedBlocks.forEach((block) => {
+              if (ocupiedBlocks.includes(block)) {
+                isPlaceTaken = true;
+                return;
+              }
+            });
+          });
+        }
+
+        if (isPlaceTaken) {
+          alert("Block already taken!!");
+
+          return;
+        }
         const deployableShipObj = {
           shipName: selectedShipToPlace.name,
           shipLength: selectedShipToPlace.shipLength,
