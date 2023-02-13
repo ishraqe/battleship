@@ -36,14 +36,25 @@ const Battleship = () => {
           : true;
 
       if (canDeployShip) {
+        const isHorizontal = selectedAxis === AXIS.horizontal;
+        let ocupiedBlocks = [];
+        const shipLengthArr = Array(selectedShipToPlace.shipLength).fill(0);
+
+        if (isHorizontal) {
+          shipLengthArr.forEach((_, index) => {
+            ocupiedBlocks.push(`${square.x + index}${square.y}`);
+          });
+        } else {
+          shipLengthArr.forEach((_, index) => {
+            ocupiedBlocks.push(`${square.x}${square.y + index}`);
+          });
+        }
+
         const deployableShipObj = {
           shipName: selectedShipToPlace.name,
           shipLength: selectedShipToPlace.shipLength,
-          axis: {
-            x: square.x,
-            y: square.y
-          },
-          isHorizontal: selectedAxis === AXIS.horizontal
+          ocupiedBlocks,
+          isHorizontal
         };
         setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
 

@@ -9,41 +9,13 @@ import { BOARD_ARR } from "../../utils/DB";
 const Board = ({ onClickBoradSquare, playerDeployedShips }) => {
   const isOcupied = (rowIndex, columnIndex) => {
     let flag = false;
-    let shipIndex = null;
-
-    playerDeployedShips.forEach((ship, index) => {
-      const displayingLogic = ship.isHorizontal
-        ? ship.axis.x < ship?.shipLength + ship?.axis.x &&
-          ship.axis.y === columnIndex
-        : ship.axis.y < ship?.shipLength + ship?.axis.y &&
-          ship.axis.x === rowIndex;
-
-      if (displayingLogic) {
+    playerDeployedShips.forEach((ship) => {
+      if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
         flag = true;
-        shipIndex = index;
-        return;
       }
     });
 
-    if (flag) {
-      if (playerDeployedShips[shipIndex].isHorizontal) {
-        return (
-          rowIndex >= playerDeployedShips[shipIndex]?.axis.x &&
-          rowIndex <
-            playerDeployedShips[shipIndex]?.shipLength +
-              playerDeployedShips[shipIndex]?.axis.x &&
-          columnIndex === playerDeployedShips[shipIndex]?.axis.y
-        );
-      } else {
-        return (
-          columnIndex >= playerDeployedShips[shipIndex]?.axis.y &&
-          columnIndex <
-            playerDeployedShips[shipIndex]?.shipLength +
-              playerDeployedShips[shipIndex]?.axis.y &&
-          rowIndex === playerDeployedShips[shipIndex]?.axis.x
-        );
-      }
-    }
+    return flag;
   };
 
   return (
