@@ -21,10 +21,10 @@ const Battleship = () => {
 
   const onSelectAxis = (axis) => {
     setSelectedAxis(axis);
+    setSelectedShipToPlace(null);
   };
 
   const onClickBoradSquare = (square) => {
-    console.log(square);
     if (selectedShipToPlace) {
       const canDeployShip =
         selectedAxis === AXIS.horizontal
@@ -43,9 +43,16 @@ const Battleship = () => {
             x: square.x,
             y: square.y
           },
-          isHorizontal: AXIS.horizontal
+          isHorizontal: selectedAxis === AXIS.horizontal
         };
         setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
+
+        const newAvailableShips = availableShips.filter(
+          (ship) => ship.name !== selectedShipToPlace.name
+        );
+
+        setAvailableShips(newAvailableShips);
+        setSelectedShipToPlace(null);
       } else {
         alert("Can not place ship here!!");
       }
