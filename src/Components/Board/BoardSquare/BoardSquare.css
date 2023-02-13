@@ -1,0 +1,31 @@
+.board__square {
+  border: 1px solid #000000;
+  cursor: crosshair;
+  transition: background-color 100ms ease-in-out;
+}
+.board__square:hover {
+  background-color: #ffec99;
+}
+
+.carrier {
+  background-color: #4c3a51;
+}
+.battleship {
+  background-color: #774360;
+}
+.cruiser {
+  background-color: #b25068;
+}
+.destroyer {
+  background-color: #ff8c8c;
+}
+.miss {
+  background-color: #000;
+}
+.hit {
+  background-color: #f03e3e;
+}
+
+.ship-sunk {
+  background-color: #6d67e4;
+}
