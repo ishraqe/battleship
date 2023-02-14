@@ -6,19 +6,16 @@ import BoardSquare from "./BoardSquare";
 import { BOARD_ARR, CURRENT_PLAYER } from "../../utils/DB";
 //
 
-const Board = ({ onClickBoradSquare, playerDeployedShips, boardOwner }) => {
+const Board = ({ onClickBoradSquare, deployedShips, boardOwner }) => {
   const isOcupied = (rowIndex, columnIndex) => {
     let flag = false;
     let shipName = "";
-
-    if (boardOwner === CURRENT_PLAYER.player) {
-      playerDeployedShips.forEach((ship) => {
-        if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
-          flag = true;
-          shipName = ship.shipName;
-        }
-      });
-    }
+    deployedShips.forEach((ship) => {
+      if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
+        flag = true;
+        shipName = ship.shipName;
+      }
+    });
 
     return {
       isOcupied: flag,

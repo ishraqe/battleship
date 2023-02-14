@@ -5,7 +5,7 @@ import { AXIS } from "../../utils/DB";
 
 const Inventory = ({
   title,
-  availableShips,
+  playerAvailableShips,
   handleSelectShipToPlace,
   selectedShipToPlace,
   playersSelectedAxis,
@@ -32,7 +32,7 @@ const Inventory = ({
           </button>
         </div>
 
-        {availableShips.map((ship) => {
+        {playerAvailableShips.map((ship) => {
           return (
             <div
               key={ship.name}

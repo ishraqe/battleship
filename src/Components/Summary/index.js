@@ -3,7 +3,7 @@ import "./Summary.css";
 
 const index = ({
   hasGameStarted,
-  availableShips,
+  playerAvailableShips,
   handleGameStart,
   currentPlayer
 }) => {
@@ -12,7 +12,7 @@ const index = ({
       <div className="summary__info">
         <h3>Current Player: {currentPlayer}</h3>
       </div>
-      {availableShips.length === 0 ? (
+      {playerAvailableShips.length === 0 ? (
         <button className="summary__btn" onClick={handleGameStart}>
           Start Game
         </button>

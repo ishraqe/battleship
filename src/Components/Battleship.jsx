@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Axis from "./Axis";
 import Board from "./Board";
@@ -8,20 +8,37 @@ import TitleBar from "./TitleBar";
 import Summary from "./Summary";
 
 import "./Battleship.css";
-import { SHIPS, AXIS, CURRENT_PLAYER } from "../utils/DB";
+import { SHIPS, AXIS, CURRENT_PLAYER, BOARD_ARR } from "../utils/DB";
+import { hasEnoughBlocksToDeploy } from "../helpers/helper";
 
 const Battleship = () => {
-  const [availableShips, setAvailableShips] = useState(SHIPS);
+  // comon states
   const [selectedShipToPlace, setSelectedShipToPlace] = useState(null);
+  const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
+  const [hasGameStarted, setHasGameStarted] = useState(true);
+
+  // player states
+  const [playerAvailableShips, setPlayerAvailableShips] = useState(SHIPS);
   const [playersSelectedAxis, setPlayersSelectedAxis] = useState(
     AXIS.horizontal
   );
-
-  const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
-  const [hasGameStarted, setHasGameStarted] = useState(false);
-
   const [playerDeployedShips, setPlayerDeployedShips] = useState([]);
+
+  // computer states
+  const [computerAvailableShips, setComputerAvailableShips] = useState(SHIPS);
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
+
+  // based on avalilable player ships  sets current player
+  useEffect(() => {
+    if (playerAvailableShips.length === 0) {
+      setCurrentPlayer(CURRENT_PLAYER.computer);
+    }
+  }, [playerAvailableShips]);
+
+  //
+  useEffect(() => {
+    deployShipsForComputer();
+  }, []);
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
@@ -32,29 +49,28 @@ const Battleship = () => {
     setSelectedShipToPlace(null);
   };
 
-  const onClickBoradSquare = (square) => {
+  const onClickBoradSquare = ({ x: rowIndex, y: columnIndex }) => {
     if (selectedShipToPlace) {
-      const canDeployShip =
-        playersSelectedAxis === AXIS.horizontal
-          ? selectedShipToPlace.shipLength + square.x > 10
-            ? false
-            : true
-          : selectedShipToPlace.shipLength + square.y > 10
-          ? false
-          : true;
+      const isHorizontal = playersSelectedAxis === AXIS.horizontal;
 
-      if (canDeployShip) {
-        const isHorizontal = playersSelectedAxis === AXIS.horizontal;
+      if (
+        hasEnoughBlocksToDeploy({
+          isHorizontal,
+          shipLength: selectedShipToPlace.shipLength,
+          rowIndex,
+          columnIndex
+        })
+      ) {
         let ocupiedBlocks = [];
         const shipLengthArr = Array(selectedShipToPlace.shipLength).fill(0);
 
         if (isHorizontal) {
           shipLengthArr.forEach((_, index) => {
-            ocupiedBlocks.push(`${square.x + index}${square.y}`);
+            ocupiedBlocks.push(`${rowIndex + index}${columnIndex}`);
           });
         } else {
           shipLengthArr.forEach((_, index) => {
-            ocupiedBlocks.push(`${square.x}${square.y + index}`);
+            ocupiedBlocks.push(`${rowIndex}${columnIndex + index}`);
           });
         }
         let isPlaceTaken = false;
@@ -83,11 +99,11 @@ const Battleship = () => {
         };
         setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
 
-        const newAvailableShips = availableShips.filter(
+        const newPlayerAvailableShips = playerAvailableShips.filter(
           (ship) => ship.name !== selectedShipToPlace.name
         );
 
-        setAvailableShips(newAvailableShips);
+        setPlayerAvailableShips(newPlayerAvailableShips);
         setSelectedShipToPlace(null);
       } else {
         alert("Can not place ship here!!");
@@ -101,17 +117,92 @@ const Battleship = () => {
     setHasGameStarted(true);
   };
 
+  const getOcuiableDataBasedOnAxis = (
+    isHorizontal,
+    rowIndex,
+    columnIndex,
+    arrIndex
+  ) => {
+    return isHorizontal
+      ? `${rowIndex + arrIndex}${columnIndex}`
+      : `${rowIndex}${columnIndex + arrIndex}`;
+  };
+
+  const getRandomOcupiableBlock = (computerShips, isHorizontal) => {
+    const columnIndex = Math.floor(Math.random() * BOARD_ARR.length);
+    const rowIndex = Math.floor(Math.random() * BOARD_ARR[columnIndex].length);
+    const length = computerShips.shipLength;
+
+    let ocupieableBlocks = [];
+
+    if (
+      hasEnoughBlocksToDeploy({
+        isHorizontal,
+        shipLength: computerShips.shipLength,
+        rowIndex,
+        columnIndex
+      })
+    ) {
+      Array(length)
+        .fill(0)
+        .forEach((_, index) => {
+          ocupieableBlocks.push(
+            getOcuiableDataBasedOnAxis(
+              isHorizontal,
+              rowIndex,
+              columnIndex,
+              index
+            )
+          );
+        });
+    } else {
+      return getRandomOcupiableBlock(computerShips, isHorizontal);
+    }
+
+    return ocupieableBlocks;
+  };
+
+  const getRandomBlock = () => {
+    let tempAvShip = computerAvailableShips;
+    let tempDeployedArr = [];
+    while (tempAvShip?.length > 0) {
+      const isHorizontal = Math.random() < 0.5 ? true : false; // ?
+
+      const block =
+        tempAvShip &&
+        tempAvShip.length > 0 &&
+        getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
+
+      const deployableShipObj = {
+        shipName: tempAvShip[0].name,
+        shipLength: tempAvShip[0].shipLength,
+        ocupiedBlocks: block,
+        isHorizontal
+      };
+      tempDeployedArr = [...tempDeployedArr, deployableShipObj];
+      tempAvShip.shift();
+    }
+
+    if (tempDeployedArr.length === 4) {
+      setComputerAvailableShips([]);
+      setComputerDeployedShips(tempDeployedArr);
+    }
+  };
+
   // randomly deploy ships on the board
   const deployShipsForComputer = () => {
     // setComputerDeployedShips()
+    getRandomBlock();
   };
+
+  console.log({ computerAvailableShips, computerDeployedShips });
 
   return (
     <div className="battleship__stage">
       <TitleBar />
       <Summary
         hasGameStarted={hasGameStarted}
-        availableShips={availableShips}
+        playerAvailableShips={playerAvailableShips}
         handleGameStart={handleGameStart}
         currentPlayer={currentPlayer}
       />
@@ -127,7 +218,7 @@ const Battleship = () => {
               <Board
                 selectedShipToPlace={selectedShipToPlace}
                 onClickBoradSquare={onClickBoradSquare}
-                playerDeployedShips={playerDeployedShips}
+                deployedShips={playerDeployedShips}
                 boardOwner={CURRENT_PLAYER.player}
               />
             </div>
@@ -138,7 +229,7 @@ const Battleship = () => {
           {!hasGameStarted ? (
             <Inventory
               title="Inventory"
-              availableShips={availableShips}
+              playerAvailableShips={playerAvailableShips}
               handleSelectShipToPlace={handleSelectShipToPlace}
               selectedShipToPlace={selectedShipToPlace}
               playersSelectedAxis={playersSelectedAxis}
@@ -154,7 +245,7 @@ const Battleship = () => {
                 <Board
                   selectedShipToPlace={selectedShipToPlace}
                   onClickBoradSquare={onClickBoradSquare}
-                  playerDeployedShips={playerDeployedShips}
+                  deployedShips={computerDeployedShips}
                   boardOwner={CURRENT_PLAYER.computer}
                 />
               </div>
