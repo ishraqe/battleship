@@ -46,6 +46,6 @@ export const AXIS = {
 };
 
 export const CURRENT_PLAYER = {
-  player: "player",
-  computer: "computer"
+  player: "You",
+  computer: "Computer"
 };

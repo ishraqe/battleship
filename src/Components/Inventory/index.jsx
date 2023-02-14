@@ -8,7 +8,7 @@ const Inventory = ({
   availableShips,
   handleSelectShipToPlace,
   selectedShipToPlace,
-  selectedAxis,
+  playersSelectedAxis,
   onSelectAxis
 }) => {
   return (
@@ -17,13 +17,15 @@ const Inventory = ({
       <div className="inventory__content">
         <div className="intevtory__axis">
           <button
-            className={selectedAxis === AXIS.horizontal ? "selected" : ""}
+            className={
+              playersSelectedAxis === AXIS.horizontal ? "selected" : ""
+            }
             onClick={() => onSelectAxis(AXIS.horizontal)}
           >
             Horizontal
           </button>
           <button
-            className={selectedAxis === AXIS.vertical ? "selected" : ""}
+            className={playersSelectedAxis === AXIS.vertical ? "selected" : ""}
             onClick={() => onSelectAxis(AXIS.vertical)}
           >
             Vertical
@@ -65,7 +67,7 @@ Inventory.propTypes = {
   availableShips: PropTypes.arrayOf(Object),
   handleSelectShipToPlace: PropTypes.func,
   selectedShipToPlace: PropTypes.object,
-  selectedAxis: PropTypes.string,
+  playersSelectedAxis: PropTypes.string,
   onSelectAxis: PropTypes.func
 };
 

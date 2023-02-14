@@ -1,6 +1,5 @@
 .battleship__inventory {
-  position: absolute;
-  right: 0px;
+  max-width: 25%;
 }
 
 .inventory__title {

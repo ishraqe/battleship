@@ -1,25 +1,24 @@
 .battleship__stage {
-  position: absolute;
-  width: 900px;
-  height: 700px;
-  left: 0px;
-  top: 0px;
-}
-
-.battleship__summary--container,
-.battleship__content {
-  padding: 0 20px;
-}
-
-.battleship__summary--container {
-  position: relative;
-  margin-top: 40px;
-  display: flex;
-}
-
-.battleship__content {
-  position: relative;
-  margin-top: 40px;
   width: 100%;
+  height: 100vh;
+}
+
+.battleship__content {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.battleship__content--board {
+  flex: 0 0 45%;
+  height: 100%;
+}
+.battleship__content--board--wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.battleship__content--board--container {
+  position: relative;
 }

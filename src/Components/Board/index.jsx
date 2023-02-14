@@ -3,19 +3,27 @@ import PropTypes, { object } from "prop-types";
 
 import "./Board.css";
 import BoardSquare from "./BoardSquare";
-import { BOARD_ARR } from "../../utils/DB";
+import { BOARD_ARR, CURRENT_PLAYER } from "../../utils/DB";
 //
 
-const Board = ({ onClickBoradSquare, playerDeployedShips }) => {
+const Board = ({ onClickBoradSquare, playerDeployedShips, boardOwner }) => {
   const isOcupied = (rowIndex, columnIndex) => {
     let flag = false;
-    playerDeployedShips.forEach((ship) => {
-      if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
-        flag = true;
-      }
-    });
+    let shipName = "";
 
-    return flag;
+    if (boardOwner === CURRENT_PLAYER.player) {
+      playerDeployedShips.forEach((ship) => {
+        if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
+          flag = true;
+          shipName = ship.shipName;
+        }
+      });
+    }
+
+    return {
+      isOcupied: flag,
+      shipName
+    };
   };
 
   return (

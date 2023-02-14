@@ -6,7 +6,9 @@ const BoardSquare = ({ onClick, isOcupied, divId }) => {
     <div
       id={divId}
       onClick={onClick}
-      className={`board__square ${isOcupied ? "cruiser" : ""}`}
+      className={`board__square ${
+        isOcupied.isOcupied ? isOcupied.shipName : ""
+      }`}
     ></div>
   );
 };

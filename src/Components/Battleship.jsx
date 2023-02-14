@@ -13,25 +13,29 @@ import { SHIPS, AXIS, CURRENT_PLAYER } from "../utils/DB";
 const Battleship = () => {
   const [availableShips, setAvailableShips] = useState(SHIPS);
   const [selectedShipToPlace, setSelectedShipToPlace] = useState(null);
-  const [selectedAxis, setSelectedAxis] = useState(AXIS.horizontal);
-  const [playerDeployedShips, setPlayerDeployedShips] = useState([]);
+  const [playersSelectedAxis, setPlayersSelectedAxis] = useState(
+    AXIS.horizontal
+  );
 
   const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
   const [hasGameStarted, setHasGameStarted] = useState(false);
+
+  const [playerDeployedShips, setPlayerDeployedShips] = useState([]);
+  const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
   };
 
   const onSelectAxis = (axis) => {
-    setSelectedAxis(axis);
+    setPlayersSelectedAxis(axis);
     setSelectedShipToPlace(null);
   };
 
   const onClickBoradSquare = (square) => {
     if (selectedShipToPlace) {
       const canDeployShip =
-        selectedAxis === AXIS.horizontal
+        playersSelectedAxis === AXIS.horizontal
           ? selectedShipToPlace.shipLength + square.x > 10
             ? false
             : true
@@ -40,7 +44,7 @@ const Battleship = () => {
           : true;
 
       if (canDeployShip) {
-        const isHorizontal = selectedAxis === AXIS.horizontal;
+        const isHorizontal = playersSelectedAxis === AXIS.horizontal;
         let ocupiedBlocks = [];
         const shipLengthArr = Array(selectedShipToPlace.shipLength).fill(0);
 
@@ -97,39 +101,66 @@ const Battleship = () => {
     setHasGameStarted(true);
   };
 
+  // randomly deploy ships on the board
+  const deployShipsForComputer = () => {
+    // setComputerDeployedShips()
+  };
+
   return (
     <div className="battleship__stage">
       <TitleBar />
-      <div className="battleship__summary--container">
-        <Summary
-          hasGameStarted={hasGameStarted}
-          availableShips={availableShips}
-          handleGameStart={handleGameStart}
-        />
-      </div>
+      <Summary
+        hasGameStarted={hasGameStarted}
+        availableShips={availableShips}
+        handleGameStart={handleGameStart}
+        currentPlayer={currentPlayer}
+      />
 
       <div className="battleship__content">
-        <div>
-          <Axis direction="row" />
-          <Axis direction="column" />
-          <Board
-            selectedShipToPlace={selectedShipToPlace}
-            onClickBoradSquare={onClickBoradSquare}
-            playerDeployedShips={playerDeployedShips}
-          />
+        <div className="battleship__content--board">
+          <div className="battleship__content--board--wrapper">
+            <h1>Player Board</h1>
 
-          {!hasGameStarted && (
+            <div className="battleship__content--board--container">
+              <Axis direction="row" />
+              <Axis direction="column" />
+              <Board
+                selectedShipToPlace={selectedShipToPlace}
+                onClickBoradSquare={onClickBoradSquare}
+                playerDeployedShips={playerDeployedShips}
+                boardOwner={CURRENT_PLAYER.player}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="battleship__content--board">
+          {!hasGameStarted ? (
             <Inventory
               title="Inventory"
               availableShips={availableShips}
               handleSelectShipToPlace={handleSelectShipToPlace}
               selectedShipToPlace={selectedShipToPlace}
-              selectedAxis={selectedAxis}
+              playersSelectedAxis={playersSelectedAxis}
               onSelectAxis={onSelectAxis}
             />
+          ) : (
+            <div className="battleship__content--board--wrapper">
+              <h1>Computer Board</h1>
+
+              <div className="battleship__content--board--container">
+                <Axis direction="row" />
+                <Axis direction="column" />
+                <Board
+                  selectedShipToPlace={selectedShipToPlace}
+                  onClickBoradSquare={onClickBoradSquare}
+                  playerDeployedShips={playerDeployedShips}
+                  boardOwner={CURRENT_PLAYER.computer}
+                />
+              </div>
+            </div>
           )}
         </div>
-        {hasGameStarted && <div>Computer</div>}
       </div>
     </div>
   );
