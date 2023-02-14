@@ -1,15 +1,25 @@
 .battleship__stage {
-    position: absolute;
-    width: 900px;
-    height: 700px;
-    left: 0px;
-    top: 0px;
+  position: absolute;
+  width: 900px;
+  height: 700px;
+  left: 0px;
+  top: 0px;
+}
+
+.battleship__summary--container,
+.battleship__content {
+  padding: 0 20px;
+}
+
+.battleship__summary--container {
+  position: relative;
+  margin-top: 40px;
+  display: flex;
 }
 
 .battleship__content {
-    position: absolute;
-    width: 800px;
-    height: 650px;
-    left: 50px;
-    top: 50px;
+  position: relative;
+  margin-top: 40px;
+  width: 100%;
+  display: flex;
 }

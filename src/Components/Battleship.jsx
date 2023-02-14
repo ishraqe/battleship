@@ -5,15 +5,19 @@ import Axis from "./Axis";
 import Board from "./Board";
 import Inventory from "./Inventory";
 import TitleBar from "./TitleBar";
+import Summary from "./Summary";
+
 import "./Battleship.css";
-import { SHIPS, AXIS } from "../utils/DB";
+import { SHIPS, AXIS, CURRENT_PLAYER } from "../utils/DB";
 
 const Battleship = () => {
   const [availableShips, setAvailableShips] = useState(SHIPS);
   const [selectedShipToPlace, setSelectedShipToPlace] = useState(null);
   const [selectedAxis, setSelectedAxis] = useState(AXIS.horizontal);
-
   const [playerDeployedShips, setPlayerDeployedShips] = useState([]);
+
+  const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
+  const [hasGameStarted, setHasGameStarted] = useState(false);
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
@@ -89,25 +93,43 @@ const Battleship = () => {
     }
   };
 
+  const handleGameStart = () => {
+    setHasGameStarted(true);
+  };
+
   return (
     <div className="battleship__stage">
       <TitleBar />
-      <div className="battleship__content">
-        <Axis direction="row" />
-        <Axis direction="column" />
-        <Board
-          selectedShipToPlace={selectedShipToPlace}
-          onClickBoradSquare={onClickBoradSquare}
-          playerDeployedShips={playerDeployedShips}
-        />
-        <Inventory
-          title="Inventory"
+      <div className="battleship__summary--container">
+        <Summary
+          hasGameStarted={hasGameStarted}
           availableShips={availableShips}
-          handleSelectShipToPlace={handleSelectShipToPlace}
-          selectedShipToPlace={selectedShipToPlace}
-          selectedAxis={selectedAxis}
-          onSelectAxis={onSelectAxis}
+          handleGameStart={handleGameStart}
         />
+      </div>
+
+      <div className="battleship__content">
+        <div>
+          <Axis direction="row" />
+          <Axis direction="column" />
+          <Board
+            selectedShipToPlace={selectedShipToPlace}
+            onClickBoradSquare={onClickBoradSquare}
+            playerDeployedShips={playerDeployedShips}
+          />
+
+          {!hasGameStarted && (
+            <Inventory
+              title="Inventory"
+              availableShips={availableShips}
+              handleSelectShipToPlace={handleSelectShipToPlace}
+              selectedShipToPlace={selectedShipToPlace}
+              selectedAxis={selectedAxis}
+              onSelectAxis={onSelectAxis}
+            />
+          )}
+        </div>
+        {hasGameStarted && <div>Computer</div>}
       </div>
     </div>
   );
