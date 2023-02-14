@@ -61,32 +61,20 @@ const Battleship = () => {
           columnIndex
         })
       ) {
-        let ocupiedBlocks = [];
+        let occupiedBlocks = [];
         const shipLengthArr = Array(selectedShipToPlace.shipLength).fill(0);
 
         if (isHorizontal) {
           shipLengthArr.forEach((_, index) => {
-            ocupiedBlocks.push(`${rowIndex + index}${columnIndex}`);
+            occupiedBlocks.push(`${rowIndex + index}${columnIndex}`);
           });
         } else {
           shipLengthArr.forEach((_, index) => {
-            ocupiedBlocks.push(`${rowIndex}${columnIndex + index}`);
-          });
-        }
-        let isPlaceTaken = false;
-
-        if (playerDeployedShips && playerDeployedShips.length > 0) {
-          playerDeployedShips.forEach((ship) => {
-            ship.ocupiedBlocks.forEach((block) => {
-              if (ocupiedBlocks.includes(block)) {
-                isPlaceTaken = true;
-                return;
-              }
-            });
+            occupiedBlocks.push(`${rowIndex}${columnIndex + index}`);
           });
         }
 
-        if (isPlaceTaken) {
+        if (isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)) {
           alert("Block already taken!!");
 
           return;
@@ -94,8 +82,9 @@ const Battleship = () => {
         const deployableShipObj = {
           shipName: selectedShipToPlace.name,
           shipLength: selectedShipToPlace.shipLength,
-          ocupiedBlocks,
-          isHorizontal
+          occupiedBlocks,
+          isHorizontal,
+          currentPlayer
         };
         setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
 
@@ -111,6 +100,22 @@ const Battleship = () => {
     } else {
       alert("Please select your ship first!!");
     }
+  };
+
+  const isPlaceTakenByOtherShip = (deployedShips, occupiedBlocks) => {
+    let isPlaceTaken = false;
+    if (deployedShips && deployedShips.length > 0) {
+      deployedShips.forEach((ship) => {
+        ship.occupiedBlocks.forEach((block) => {
+          if (occupiedBlocks.includes(block)) {
+            isPlaceTaken = true;
+            return;
+          }
+        });
+      });
+    }
+
+    return isPlaceTaken;
   };
 
   const handleGameStart = () => {
@@ -168,19 +173,20 @@ const Battleship = () => {
     while (tempAvShip?.length > 0) {
       const isHorizontal = Math.random() < 0.5 ? true : false; // ?
 
-      const block =
-        tempAvShip &&
-        tempAvShip.length > 0 &&
-        getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
-
-      const deployableShipObj = {
-        shipName: tempAvShip[0].name,
-        shipLength: tempAvShip[0].shipLength,
-        ocupiedBlocks: block,
-        isHorizontal
-      };
-      tempDeployedArr = [...tempDeployedArr, deployableShipObj];
-      tempAvShip.shift();
+      let block = getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
+      if (isPlaceTakenByOtherShip(tempDeployedArr, block)) {
+        block = getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
+      } else {
+        const deployableShipObj = {
+          shipName: tempAvShip[0].name,
+          shipLength: tempAvShip[0].shipLength,
+          occupiedBlocks: block,
+          isHorizontal,
+          currentPlayer
+        };
+        tempDeployedArr = [...tempDeployedArr, deployableShipObj];
+        tempAvShip.shift();
+      }
     }
 
     if (tempDeployedArr.length === 4) {

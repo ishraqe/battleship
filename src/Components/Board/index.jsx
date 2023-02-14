@@ -11,7 +11,7 @@ const Board = ({ onClickBoradSquare, deployedShips, boardOwner }) => {
     let flag = false;
     let shipName = "";
     deployedShips.forEach((ship) => {
-      if (ship.ocupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
+      if (ship.occupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
         flag = true;
         shipName = ship.shipName;
       }
