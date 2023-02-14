@@ -11,3 +11,6 @@
   grid-template-columns: repeat(var(--board-columns), 1fr);
   grid-template-rows: repeat(var(--board-rows), 1fr);
 }
+.disbale-block {
+  pointer-events: none;
+}

@@ -15,7 +15,7 @@ const Battleship = () => {
   // comon states
   const [selectedShipToPlace, setSelectedShipToPlace] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
-  const [hasGameStarted, setHasGameStarted] = useState(true);
+  const [hasGameStarted, setHasGameStarted] = useState(false);
 
   // player states
   const [playerAvailableShips, setPlayerAvailableShips] = useState(SHIPS);
@@ -34,11 +34,6 @@ const Battleship = () => {
       setCurrentPlayer(CURRENT_PLAYER.computer);
     }
   }, [playerAvailableShips]);
-
-  //
-  useEffect(() => {
-    deployShipsForComputer();
-  }, []);
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
@@ -120,6 +115,7 @@ const Battleship = () => {
 
   const handleGameStart = () => {
     setHasGameStarted(true);
+    deployShipsForComputer();
   };
 
   const getOcuiableDataBasedOnAxis = (
@@ -167,7 +163,8 @@ const Battleship = () => {
     return ocupieableBlocks;
   };
 
-  const getRandomBlock = () => {
+  // randomly deploy ships on the board
+  const deployShipsForComputer = () => {
     let tempAvShip = computerAvailableShips;
     let tempDeployedArr = [];
     while (tempAvShip?.length > 0) {
@@ -195,12 +192,6 @@ const Battleship = () => {
     }
   };
 
-  // randomly deploy ships on the board
-  const deployShipsForComputer = () => {
-    // setComputerDeployedShips()
-    getRandomBlock();
-  };
-
   console.log({ computerAvailableShips, computerDeployedShips });
 
   return (
@@ -222,6 +213,7 @@ const Battleship = () => {
               <Axis direction="row" />
               <Axis direction="column" />
               <Board
+                hasGameStarted={hasGameStarted}
                 selectedShipToPlace={selectedShipToPlace}
                 onClickBoradSquare={onClickBoradSquare}
                 deployedShips={playerDeployedShips}
@@ -249,6 +241,7 @@ const Battleship = () => {
                 <Axis direction="row" />
                 <Axis direction="column" />
                 <Board
+                  hasGameStarted={hasGameStarted}
                   selectedShipToPlace={selectedShipToPlace}
                   onClickBoradSquare={onClickBoradSquare}
                   deployedShips={computerDeployedShips}

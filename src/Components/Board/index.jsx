@@ -6,13 +6,18 @@ import BoardSquare from "./BoardSquare";
 import { BOARD_ARR, CURRENT_PLAYER } from "../../utils/DB";
 //
 
-const Board = ({ onClickBoradSquare, deployedShips, boardOwner }) => {
+const Board = ({
+  onClickBoradSquare,
+  deployedShips,
+  boardOwner,
+  hasGameStarted
+}) => {
   const isOcupied = (rowIndex, columnIndex) => {
     let flag = false;
     let shipName = "";
     deployedShips.forEach((ship) => {
       if (ship.occupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
-        flag = true;
+        flag = ship.currentPlayer === CURRENT_PLAYER.computer ? false : true;
         shipName = ship.shipName;
       }
     });
@@ -24,7 +29,13 @@ const Board = ({ onClickBoradSquare, deployedShips, boardOwner }) => {
   };
 
   return (
-    <div className="battleship__board">
+    <div
+      className={`battleship__board ${
+        hasGameStarted && boardOwner === CURRENT_PLAYER.player
+          ? "disbale-block"
+          : ""
+      }`}
+    >
       {BOARD_ARR.map((row, columnIndex) => {
         return row.map((square, rowIndex) => {
           return (
