@@ -12,7 +12,10 @@ import {
   hasEnoughBlocksToDeploy,
   getOccupiableBlocks,
   isPlaceTakenByOtherShip,
-  getRandomOcupiableBlock
+  getRandomOcupiableBlock,
+  generateRandomRowAndColumnIndex,
+  getShipNameByCoordinates,
+  isArraysEqual
 } from "../helpers/helper";
 
 const Battleship = () => {
@@ -32,25 +35,17 @@ const Battleship = () => {
   const [computerAvailableShips, setComputerAvailableShips] = useState(SHIPS);
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
-  // based on avalilable player ships  sets current player
-  // {
-  //   "destroyer": {
-  //     boardOwner: ;
-  //     attckedIndexes : []
-  //   },
-  //   "carrier": {
-
-  //   },
-  //   "miss": {
-  //     attackedBlocks: [72382734237428472834]
+  // useEffect(() => {
+  //   if (!hasGameStarted && playerAvailableShips.length === 0) {
+  //     setCurrentPlayer(CURRENT_PLAYER.computer);
   //   }
-  // }
+  // }, [hasGameStarted, playerAvailableShips]);
 
   useEffect(() => {
-    if (playerAvailableShips.length === 0) {
-      setCurrentPlayer(CURRENT_PLAYER.computer);
+    if (hasGameStarted && currentPlayer === CURRENT_PLAYER.computer) {
+      attackOnPlayerBoardByComputer();
     }
-  }, [playerAvailableShips]);
+  }, [hasGameStarted, currentPlayer]);
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
@@ -61,9 +56,21 @@ const Battleship = () => {
     setSelectedShipToPlace(null);
   };
 
+  const attackOnPlayerBoardByComputer = () => {
+    const { rowIndex, columnIndex } = generateRandomRowAndColumnIndex();
+    const { shipName } = isPlaceTakenByOtherShip(
+      playerAvailableShips,
+      `${rowIndex}${columnIndex}`
+    );
+    handleMissileAttackOnBoard(rowIndex, columnIndex, shipName);
+  };
+
   const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
     if (hasGameStarted) {
-      handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
+      if (currentPlayer === CURRENT_PLAYER.player) {
+        handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
+      }
+
       return;
     }
 
@@ -156,20 +163,31 @@ const Battleship = () => {
   const handleMissileAttackOnBoard = (rowIndex, columnIndex, clickedShip) => {
     const cordinationXY = `${rowIndex}${columnIndex}`;
     let newDeployedArr = [];
-    if (clickedShip !== "") {
-      newDeployedArr = computerDeployedShips.map((ship) => {
-        if (ship.shipName === clickedShip) {
+    const targetBoardShips =
+      currentPlayer === CURRENT_PLAYER.player
+        ? computerDeployedShips
+        : playerDeployedShips;
+    let targetShipName = clickedShip;
+
+    if (currentPlayer === CURRENT_PLAYER.computer) {
+      // check if any ship available
+      targetShipName = getShipNameByCoordinates(
+        playerDeployedShips,
+        cordinationXY
+      );
+    }
+    if (targetShipName !== "") {
+      newDeployedArr = targetBoardShips.map((ship) => {
+        if (ship.shipName === targetShipName) {
           if (ship.attackedBlocks.length > 0) {
             if (ship.attackedBlocks.includes(cordinationXY)) {
               return;
             }
-            const attackedBlocks = [...ship.attackedBlocks, cordinationXY];
+            const newAttackedBlocks = [...ship.attackedBlocks, cordinationXY];
             return {
               ...ship,
-              attackedBlocks,
-              isShipSunk:
-                attackedBlocks.sort((a, b) => a - b).join() ===
-                ship.occupiedBlocks.sort((a, b) => a - b).join()
+              attackedBlocks: newAttackedBlocks,
+              isShipSunk: isArraysEqual(newAttackedBlocks, ship.occupiedBlocks)
             };
           } else {
             return {
@@ -184,12 +202,23 @@ const Battleship = () => {
       });
     } else {
       newDeployedArr = [
-        ...computerDeployedShips,
+        ...targetBoardShips,
         { shipName: "miss", attackedBlocks: [`${rowIndex}${columnIndex}`] }
       ];
     }
+    if (currentPlayer === CURRENT_PLAYER.player) {
+      setComputerDeployedShips(newDeployedArr);
+    } else {
+      setPlayerDeployedShips(newDeployedArr);
+    }
 
-    setComputerDeployedShips(newDeployedArr);
+    setTimeout(() => {
+      setCurrentPlayer(
+        currentPlayer === CURRENT_PLAYER.player
+          ? CURRENT_PLAYER.computer
+          : CURRENT_PLAYER.player
+      );
+    }, [200]);
   };
 
   return (

@@ -69,9 +69,18 @@ export const isPlaceTakenByOtherShip = (deployedShips, occupiedBlocks) => {
   return { isPlaceTaken, shipName };
 };
 
-export const getRandomOcupiableBlock = (computerShips, isHorizontal) => {
+export const generateRandomRowAndColumnIndex = () => {
   const columnIndex = Math.floor(Math.random() * BOARD_ARR.length);
   const rowIndex = Math.floor(Math.random() * BOARD_ARR[columnIndex].length);
+
+  return {
+    rowIndex,
+    columnIndex
+  };
+};
+
+export const getRandomOcupiableBlock = (computerShips, isHorizontal) => {
+  const { rowIndex, columnIndex } = generateRandomRowAndColumnIndex();
 
   if (
     hasEnoughBlocksToDeploy(
@@ -118,20 +127,23 @@ export const checkIfAttackBlockHasTheSameShipAndIndex = (
   return result;
 };
 
-export const checkIfTargetedBlockIsAlreadyAttacked = (
-  deployedShipBlocks,
-  shipName,
-  selectedIndex
-) => {
-  let result = false;
+export const getShipNameByCoordinates = (deployedShips, coordinates) => {
+  let shipName = "";
+  deployedShips.forEach((ship) => {
+    console.log({ ship });
+    if (ship.shipName !== "miss") {
+      ship.occupiedBlocks.forEach((block) => {
+        if (block === coordinates) {
+          shipName = ship.shipName;
+        }
+      });
+    }
+  });
 
-  if (
-    deployedShipBlocks &&
-    deployedShipBlocks?.length > 0 &&
-    deployedShipBlocks?.attackedBlocks &&
-    deployedShipBlocks?.attackedBlocks.legnth > 0
-  ) {
-    deployedShipBlocks.forEach((block) => {});
-  }
-  return result;
+  return shipName;
+};
+
+export const isArraysEqual = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) return false;
+  return arr1.sort().toString() === arr2.sort().toString();
 };

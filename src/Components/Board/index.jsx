@@ -45,7 +45,6 @@ const Board = ({
           : false;
       }
     });
-
     return {
       isOcupied: flag,
       shipName,
