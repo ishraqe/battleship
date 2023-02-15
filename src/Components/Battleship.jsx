@@ -49,7 +49,12 @@ const Battleship = () => {
     setSelectedShipToPlace(null);
   };
 
-  const onClickBoradSquare = ({ x: rowIndex, y: columnIndex }) => {
+  const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
+    if (hasGameStarted) {
+      handleAttackOnBoard(rowIndex, columnIndex, clickedShip);
+      return;
+    }
+
     if (selectedShipToPlace) {
       const isHorizontal = playersSelectedAxis === AXIS.horizontal;
 
@@ -129,6 +134,8 @@ const Battleship = () => {
     }
   };
 
+  const handleAttackOnBoard = (rowIndex, columnIndex, clickedShip) => {};
+
   return (
     <div className="battleship__stage">
       <TitleBar />
@@ -181,6 +188,7 @@ const Battleship = () => {
                   onClickBoradSquare={onClickBoradSquare}
                   deployedShips={computerDeployedShips}
                   boardOwner={CURRENT_PLAYER.computer}
+                  handleAttackOnBoard={handleAttackOnBoard}
                 />
               </div>
             </div>

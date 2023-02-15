@@ -88,3 +88,29 @@ export const getRandomOcupiableBlock = (computerShips, isHorizontal) => {
     return getRandomOcupiableBlock(computerShips, isHorizontal);
   }
 };
+
+export const checkIfAttackBlockHasTheSameShipAndIndex = (
+  shipName,
+  selectedIndex,
+  deployedShipArr
+) => {
+  let result = false;
+
+  if (
+    deployedShipArr &&
+    deployedShipArr.length > 0 &&
+    deployedShipArr.occupiedBlocks &&
+    deployedShipArr.occupiedBlocks.length > 0
+  ) {
+    deployedShipArr.occupiedBlocks.forEach((block) => {
+      if (
+        block.shipName === shipName &&
+        block.attackedIndex === selectedIndex
+      ) {
+        result = true;
+      }
+    });
+  }
+
+  return result;
+};

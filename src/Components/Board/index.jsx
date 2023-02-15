@@ -38,15 +38,15 @@ const Board = ({
       }`}
     >
       {BOARD_ARR.map((row, columnIndex) => {
-        return row.map((square, rowIndex) => {
+        return row.map((_, rowIndex) => {
           return (
             <BoardSquare
               divId={`cell_${rowIndex}_${columnIndex}`}
               onClick={() => {
-                console.log({ rowIndex, columnIndex });
                 onClickBoradSquare({
-                  x: rowIndex,
-                  y: columnIndex
+                  rowIndex,
+                  columnIndex,
+                  clickedShip: isOcupied(rowIndex, columnIndex).shipName || ""
                 });
               }}
               isOcupied={isOcupied(rowIndex, columnIndex)}
