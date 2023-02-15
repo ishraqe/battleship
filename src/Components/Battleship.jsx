@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 
 import Axis from "./Axis";
@@ -8,8 +7,13 @@ import TitleBar from "./TitleBar";
 import Summary from "./Summary";
 
 import "./Battleship.css";
-import { SHIPS, AXIS, CURRENT_PLAYER, BOARD_ARR } from "../utils/DB";
-import { hasEnoughBlocksToDeploy } from "../helpers/helper";
+import { SHIPS, AXIS, CURRENT_PLAYER } from "../utils/DB";
+import {
+  hasEnoughBlocksToDeploy,
+  getOccupiableBlocks,
+  isPlaceTakenByOtherShip,
+  getRandomOcupiableBlock
+} from "../helpers/helper";
 
 const Battleship = () => {
   // comon states
@@ -29,6 +33,7 @@ const Battleship = () => {
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
   // based on avalilable player ships  sets current player
+
   useEffect(() => {
     if (playerAvailableShips.length === 0) {
       setCurrentPlayer(CURRENT_PLAYER.computer);
@@ -49,29 +54,22 @@ const Battleship = () => {
       const isHorizontal = playersSelectedAxis === AXIS.horizontal;
 
       if (
-        hasEnoughBlocksToDeploy({
+        hasEnoughBlocksToDeploy(
           isHorizontal,
-          shipLength: selectedShipToPlace.shipLength,
+          selectedShipToPlace.shipLength,
           rowIndex,
           columnIndex
-        })
+        )
       ) {
-        let occupiedBlocks = [];
-        const shipLengthArr = Array(selectedShipToPlace.shipLength).fill(0);
-
-        if (isHorizontal) {
-          shipLengthArr.forEach((_, index) => {
-            occupiedBlocks.push(`${rowIndex + index}${columnIndex}`);
-          });
-        } else {
-          shipLengthArr.forEach((_, index) => {
-            occupiedBlocks.push(`${rowIndex}${columnIndex + index}`);
-          });
-        }
+        const occupiedBlocks = getOccupiableBlocks(
+          isHorizontal,
+          rowIndex,
+          columnIndex,
+          selectedShipToPlace.shipLength
+        );
 
         if (isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)) {
           alert("Block already taken!!");
-
           return;
         }
         const deployableShipObj = {
@@ -97,70 +95,9 @@ const Battleship = () => {
     }
   };
 
-  const isPlaceTakenByOtherShip = (deployedShips, occupiedBlocks) => {
-    let isPlaceTaken = false;
-    if (deployedShips && deployedShips.length > 0) {
-      deployedShips.forEach((ship) => {
-        ship.occupiedBlocks.forEach((block) => {
-          if (occupiedBlocks.includes(block)) {
-            isPlaceTaken = true;
-            return;
-          }
-        });
-      });
-    }
-
-    return isPlaceTaken;
-  };
-
   const handleGameStart = () => {
     setHasGameStarted(true);
     deployShipsForComputer();
-  };
-
-  const getOcuiableDataBasedOnAxis = (
-    isHorizontal,
-    rowIndex,
-    columnIndex,
-    arrIndex
-  ) => {
-    return isHorizontal
-      ? `${rowIndex + arrIndex}${columnIndex}`
-      : `${rowIndex}${columnIndex + arrIndex}`;
-  };
-
-  const getRandomOcupiableBlock = (computerShips, isHorizontal) => {
-    const columnIndex = Math.floor(Math.random() * BOARD_ARR.length);
-    const rowIndex = Math.floor(Math.random() * BOARD_ARR[columnIndex].length);
-    const length = computerShips.shipLength;
-
-    let ocupieableBlocks = [];
-
-    if (
-      hasEnoughBlocksToDeploy({
-        isHorizontal,
-        shipLength: computerShips.shipLength,
-        rowIndex,
-        columnIndex
-      })
-    ) {
-      Array(length)
-        .fill(0)
-        .forEach((_, index) => {
-          ocupieableBlocks.push(
-            getOcuiableDataBasedOnAxis(
-              isHorizontal,
-              rowIndex,
-              columnIndex,
-              index
-            )
-          );
-        });
-    } else {
-      return getRandomOcupiableBlock(computerShips, isHorizontal);
-    }
-
-    return ocupieableBlocks;
   };
 
   // randomly deploy ships on the board
@@ -191,8 +128,6 @@ const Battleship = () => {
       setComputerDeployedShips(tempDeployedArr);
     }
   };
-
-  console.log({ computerAvailableShips, computerDeployedShips });
 
   return (
     <div className="battleship__stage">

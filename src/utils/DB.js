@@ -30,16 +30,6 @@ export const BOARD_ARR = [
   [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 ];
 
-// export const BOARD_ARR = [
-//   [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-//   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-// ];
-
-// BOARD_ARR[x][y]
-
 export const AXIS = {
   horizontal: "horizontal",
   vertical: "vertical"

@@ -17,7 +17,8 @@ const Board = ({
     let shipName = "";
     deployedShips.forEach((ship) => {
       if (ship.occupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
-        flag = ship.currentPlayer === CURRENT_PLAYER.computer ? false : true;
+        // flag = ship.currentPlayer === CURRENT_PLAYER.computer ? false : true;
+        flag = true;
         shipName = ship.shipName;
       }
     });
