@@ -68,6 +68,7 @@ const Battleship = () => {
   const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
     if (hasGameStarted) {
       if (currentPlayer === CURRENT_PLAYER.player) {
+        console.log("1", { clickedShip });
         handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
       }
 
@@ -129,6 +130,8 @@ const Battleship = () => {
     deployShipsForComputer();
   };
 
+  console.log({ currentPlayer });
+
   // randomly deploy ships on the board
   const deployShipsForComputer = () => {
     let tempAvShip = computerAvailableShips;
@@ -168,7 +171,9 @@ const Battleship = () => {
         ? computerDeployedShips
         : playerDeployedShips;
     let targetShipName = clickedShip;
-
+    {
+      console.log("2", { targetShipName });
+    }
     if (currentPlayer === CURRENT_PLAYER.computer) {
       // check if any ship available
       targetShipName = getShipNameByCoordinates(

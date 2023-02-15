@@ -18,7 +18,7 @@ const BoardSquare = ({ onClick, isOcupiedCheck, divId }) => {
   return (
     <div
       id={divId}
-      onClick={onClick}
+      onClick={() => (isShipSunk || isAttacked ? null : onClick())}
       className={`board__square ${boardAttackDeployClass}`}
     ></div>
   );

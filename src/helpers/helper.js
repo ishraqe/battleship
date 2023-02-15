@@ -130,7 +130,6 @@ export const checkIfAttackBlockHasTheSameShipAndIndex = (
 export const getShipNameByCoordinates = (deployedShips, coordinates) => {
   let shipName = "";
   deployedShips.forEach((ship) => {
-    console.log({ ship });
     if (ship.shipName !== "miss") {
       ship.occupiedBlocks.forEach((block) => {
         if (block === coordinates) {

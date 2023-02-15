@@ -26,25 +26,27 @@ const Board = ({
     let isAttacked = false;
     let isShipSunk = false;
     const currentRowColumnIndex = `${rowIndex}${columnIndex}`;
-
-    deployedShips.forEach((ship) => {
-      if (
-        ship.shipName === "miss" &&
-        currentRowColumnIndex === ship.attackedBlocks.join()
-      ) {
-        shipName = "miss";
-      } else if (
-        ship.shipName !== "miss" &&
-        ship.occupiedBlocks.includes(currentRowColumnIndex)
-      ) {
-        flag = true;
-        shipName = ship.shipName;
-        isShipSunk = ship.isShipSunk ? true : false;
-        isAttacked = ship.attackedBlocks.includes(currentRowColumnIndex)
-          ? true
-          : false;
-      }
-    });
+    console.log("board", { deployedShips });
+    deployedShips &&
+      deployedShips.forEach((ship) => {
+        console.log("board", { ship });
+        if (
+          ship.shipName === "miss" &&
+          currentRowColumnIndex === ship.attackedBlocks.join()
+        ) {
+          shipName = "miss";
+        } else if (
+          ship.shipName !== "miss" &&
+          ship.occupiedBlocks.includes(currentRowColumnIndex)
+        ) {
+          flag = true;
+          shipName = ship.shipName;
+          isShipSunk = ship.isShipSunk ? true : false;
+          isAttacked = ship.attackedBlocks.includes(currentRowColumnIndex)
+            ? true
+            : false;
+        }
+      });
     return {
       isOcupied: flag,
       shipName,
@@ -66,14 +68,14 @@ const Board = ({
           return (
             <BoardSquare
               divId={`cell_${rowIndex}_${columnIndex}`}
-              onClick={() => {
+              onClick={() =>
                 onClickBoradSquare({
                   rowIndex,
                   columnIndex,
                   clickedShip:
                     isOcupiedCheck(rowIndex, columnIndex).shipName || ""
-                });
-              }}
+                })
+              }
               isOcupiedCheck={isOcupiedCheck(rowIndex, columnIndex)}
               key={`cell_${rowIndex}_${columnIndex}`}
             />
