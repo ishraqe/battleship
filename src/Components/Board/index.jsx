@@ -26,10 +26,8 @@ const Board = ({
     let isAttacked = false;
     let isShipSunk = false;
     const currentRowColumnIndex = `${rowIndex}${columnIndex}`;
-    console.log("board", { deployedShips });
     deployedShips &&
       deployedShips.forEach((ship) => {
-        console.log("board", { ship });
         if (
           ship.shipName === "miss" &&
           currentRowColumnIndex === ship.attackedBlocks.join()

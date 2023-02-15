@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import Swal from "sweetalert2";
+
 import Axis from "./Axis";
 import Board from "./Board";
 import Inventory from "./Inventory";
@@ -35,17 +37,59 @@ const Battleship = () => {
   const [computerAvailableShips, setComputerAvailableShips] = useState(SHIPS);
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
-  // useEffect(() => {
-  //   if (!hasGameStarted && playerAvailableShips.length === 0) {
-  //     setCurrentPlayer(CURRENT_PLAYER.computer);
-  //   }
-  // }, [hasGameStarted, playerAvailableShips]);
-
   useEffect(() => {
     if (hasGameStarted && currentPlayer === CURRENT_PLAYER.computer) {
       attackOnPlayerBoardByComputer();
     }
   }, [hasGameStarted, currentPlayer]);
+
+  useEffect(() => {
+    const checkForWinner = (ships, player) => {
+      const { isAllSunk, winner } = getWinner(ships, player);
+      if (isAllSunk) {
+        Swal.fire(`Winner is ${winner}`).then(() => resetGame());
+      }
+    };
+
+    if (hasGameStarted) {
+      checkForWinner(computerDeployedShips, CURRENT_PLAYER.computer);
+      checkForWinner(playerDeployedShips, CURRENT_PLAYER.player);
+    }
+  }, [hasGameStarted, computerDeployedShips, playerDeployedShips]);
+
+  const getWinner = (deployedShips, boardOwner) => {
+    let winner = "";
+    let isAllSunk = false;
+    if (deployedShips && deployedShips.length > 0) {
+      let winnerLength = 0;
+      deployedShips.forEach((ship) => {
+        if (ship.isShipSunk) {
+          winnerLength++;
+        }
+      });
+
+      if (winnerLength === 4) {
+        isAllSunk = true;
+        if (boardOwner === CURRENT_PLAYER.player) {
+          winner = "Computer";
+        } else {
+          winner = "Player";
+        }
+      }
+    }
+
+    return { isAllSunk, winner };
+  };
+  const resetGame = () => {
+    setSelectedShipToPlace(null);
+    setCurrentPlayer(CURRENT_PLAYER.player);
+    setHasGameStarted(false);
+    setPlayerAvailableShips(SHIPS);
+    setComputerAvailableShips(SHIPS);
+    setPlayersSelectedAxis(AXIS.horizontal);
+    setPlayerDeployedShips([]);
+    setComputerDeployedShips([]);
+  };
 
   const handleSelectShipToPlace = (ship) => {
     setSelectedShipToPlace(ship);
@@ -68,7 +112,6 @@ const Battleship = () => {
   const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
     if (hasGameStarted) {
       if (currentPlayer === CURRENT_PLAYER.player) {
-        console.log("1", { clickedShip });
         handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
       }
 
@@ -97,7 +140,7 @@ const Battleship = () => {
           isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)
             .isPlaceTaken
         ) {
-          alert("Block already taken!!");
+          Swal.fire("Block already taken!!");
           return;
         }
         const deployableShipObj = {
@@ -118,10 +161,10 @@ const Battleship = () => {
         setPlayerAvailableShips(newPlayerAvailableShips);
         setSelectedShipToPlace(null);
       } else {
-        alert("Can not place ship here!!");
+        Swal.fire("Can not place ship here!!");
       }
     } else {
-      alert("Please select your ship first!!");
+      Swal.fire("Please select your ship first!!");
     }
   };
 
@@ -129,8 +172,6 @@ const Battleship = () => {
     setHasGameStarted(true);
     deployShipsForComputer();
   };
-
-  console.log({ currentPlayer });
 
   // randomly deploy ships on the board
   const deployShipsForComputer = () => {
@@ -171,9 +212,7 @@ const Battleship = () => {
         ? computerDeployedShips
         : playerDeployedShips;
     let targetShipName = clickedShip;
-    {
-      console.log("2", { targetShipName });
-    }
+
     if (currentPlayer === CURRENT_PLAYER.computer) {
       // check if any ship available
       targetShipName = getShipNameByCoordinates(
@@ -211,6 +250,7 @@ const Battleship = () => {
         { shipName: "miss", attackedBlocks: [`${rowIndex}${columnIndex}`] }
       ];
     }
+
     if (currentPlayer === CURRENT_PLAYER.player) {
       setComputerDeployedShips(newDeployedArr);
     } else {
