@@ -74,6 +74,7 @@ const Board = ({
                     isOcupiedCheck(rowIndex, columnIndex).shipName || ""
                 })
               }
+              boardOwner={boardOwner}
               isOcupiedCheck={isOcupiedCheck(rowIndex, columnIndex)}
               key={`cell_${rowIndex}_${columnIndex}`}
             />

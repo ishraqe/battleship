@@ -1,7 +1,8 @@
 import React from "react";
 import "./BoardSquare.css";
+import { CURRENT_PLAYER } from "../../../utils/DB";
 
-const BoardSquare = ({ onClick, isOcupiedCheck, divId }) => {
+const BoardSquare = ({ onClick, isOcupiedCheck, boardOwner, divId }) => {
   const { isOcupied, shipName, isShipSunk, isAttacked } = isOcupiedCheck;
 
   let boardAttackDeployClass = "";
@@ -12,7 +13,8 @@ const BoardSquare = ({ onClick, isOcupiedCheck, divId }) => {
   } else if (!isShipSunk && isAttacked) {
     boardAttackDeployClass = "hit";
   } else if (shipName !== "miss" && isOcupied) {
-    boardAttackDeployClass = shipName;
+    boardAttackDeployClass =
+      boardOwner === CURRENT_PLAYER.computer ? "" : shipName;
   }
 
   return (
