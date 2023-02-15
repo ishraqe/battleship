@@ -6,26 +6,51 @@ import BoardSquare from "./BoardSquare";
 import { BOARD_ARR, CURRENT_PLAYER } from "../../utils/DB";
 //
 
+// attackedBlocks: ['03', '04', '05']
+// currentPlayer: "Computer"
+// isHorizontal: false
+// isShipSunk: true
+// occupiedBlocks: ['03', '04', '05']
+// shipLength: 3
+// shipName: "cruiser"
+
 const Board = ({
   onClickBoradSquare,
   deployedShips,
   boardOwner,
   hasGameStarted
 }) => {
-  const isOcupied = (rowIndex, columnIndex) => {
+  const isOcupiedCheck = (rowIndex, columnIndex) => {
     let flag = false;
     let shipName = "";
+    let isAttacked = false;
+    let isShipSunk = false;
+    const currentRowColumnIndex = `${rowIndex}${columnIndex}`;
+
     deployedShips.forEach((ship) => {
-      if (ship.occupiedBlocks.includes(`${rowIndex}${columnIndex}`)) {
-        // flag = ship.currentPlayer === CURRENT_PLAYER.computer ? false : true;
+      if (
+        ship.shipName === "miss" &&
+        currentRowColumnIndex === ship.attackedBlocks.join()
+      ) {
+        shipName = "miss";
+      } else if (
+        ship.shipName !== "miss" &&
+        ship.occupiedBlocks.includes(currentRowColumnIndex)
+      ) {
         flag = true;
         shipName = ship.shipName;
+        isShipSunk = ship.isShipSunk ? true : false;
+        isAttacked = ship.attackedBlocks.includes(currentRowColumnIndex)
+          ? true
+          : false;
       }
     });
 
     return {
       isOcupied: flag,
-      shipName
+      shipName,
+      isShipSunk,
+      isAttacked
     };
   };
 
@@ -46,10 +71,11 @@ const Board = ({
                 onClickBoradSquare({
                   rowIndex,
                   columnIndex,
-                  clickedShip: isOcupied(rowIndex, columnIndex).shipName || ""
+                  clickedShip:
+                    isOcupiedCheck(rowIndex, columnIndex).shipName || ""
                 });
               }}
-              isOcupied={isOcupied(rowIndex, columnIndex)}
+              isOcupiedCheck={isOcupiedCheck(rowIndex, columnIndex)}
               key={`cell_${rowIndex}_${columnIndex}`}
             />
           );

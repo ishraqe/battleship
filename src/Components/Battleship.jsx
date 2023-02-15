@@ -33,6 +33,18 @@ const Battleship = () => {
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
   // based on avalilable player ships  sets current player
+  // {
+  //   "destroyer": {
+  //     boardOwner: ;
+  //     attckedIndexes : []
+  //   },
+  //   "carrier": {
+
+  //   },
+  //   "miss": {
+  //     attackedBlocks: [72382734237428472834]
+  //   }
+  // }
 
   useEffect(() => {
     if (playerAvailableShips.length === 0) {
@@ -51,7 +63,7 @@ const Battleship = () => {
 
   const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
     if (hasGameStarted) {
-      handleAttackOnBoard(rowIndex, columnIndex, clickedShip);
+      handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
       return;
     }
 
@@ -73,7 +85,10 @@ const Battleship = () => {
           selectedShipToPlace.shipLength
         );
 
-        if (isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)) {
+        if (
+          isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)
+            .isPlaceTaken
+        ) {
           alert("Block already taken!!");
           return;
         }
@@ -82,7 +97,9 @@ const Battleship = () => {
           shipLength: selectedShipToPlace.shipLength,
           occupiedBlocks,
           isHorizontal,
-          currentPlayer
+          currentPlayer,
+          attackedBlocks: [],
+          isShipSunk: false
         };
         setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
 
@@ -113,7 +130,7 @@ const Battleship = () => {
       const isHorizontal = Math.random() < 0.5 ? true : false; // ?
 
       let block = getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
-      if (isPlaceTakenByOtherShip(tempDeployedArr, block)) {
+      if (isPlaceTakenByOtherShip(tempDeployedArr, block).isPlaceTaken) {
         block = getRandomOcupiableBlock(tempAvShip[0], isHorizontal);
       } else {
         const deployableShipObj = {
@@ -121,7 +138,9 @@ const Battleship = () => {
           shipLength: tempAvShip[0].shipLength,
           occupiedBlocks: block,
           isHorizontal,
-          currentPlayer
+          currentPlayer,
+          attackedBlocks: [],
+          isShipSunk: false
         };
         tempDeployedArr = [...tempDeployedArr, deployableShipObj];
         tempAvShip.shift();
@@ -134,7 +153,44 @@ const Battleship = () => {
     }
   };
 
-  const handleAttackOnBoard = (rowIndex, columnIndex, clickedShip) => {};
+  const handleMissileAttackOnBoard = (rowIndex, columnIndex, clickedShip) => {
+    const cordinationXY = `${rowIndex}${columnIndex}`;
+    let newDeployedArr = [];
+    if (clickedShip !== "") {
+      newDeployedArr = computerDeployedShips.map((ship) => {
+        if (ship.shipName === clickedShip) {
+          if (ship.attackedBlocks.length > 0) {
+            if (ship.attackedBlocks.includes(cordinationXY)) {
+              return;
+            }
+            const attackedBlocks = [...ship.attackedBlocks, cordinationXY];
+            return {
+              ...ship,
+              attackedBlocks,
+              isShipSunk:
+                attackedBlocks.sort((a, b) => a - b).join() ===
+                ship.occupiedBlocks.sort((a, b) => a - b).join()
+            };
+          } else {
+            return {
+              ...ship,
+              attackedBlocks: [`${rowIndex}${columnIndex}`],
+              isShipSunk: false
+            };
+          }
+        } else {
+          return ship;
+        }
+      });
+    } else {
+      newDeployedArr = [
+        ...computerDeployedShips,
+        { shipName: "miss", attackedBlocks: [`${rowIndex}${columnIndex}`] }
+      ];
+    }
+
+    setComputerDeployedShips(newDeployedArr);
+  };
 
   return (
     <div className="battleship__stage">
@@ -188,7 +244,6 @@ const Battleship = () => {
                   onClickBoradSquare={onClickBoradSquare}
                   deployedShips={computerDeployedShips}
                   boardOwner={CURRENT_PLAYER.computer}
-                  handleAttackOnBoard={handleAttackOnBoard}
                 />
               </div>
             </div>
