@@ -19,9 +19,9 @@ const index = ({ playerDeployedShips, computerDeployedShips }) => {
     let totalDeployedShips = 0;
     let totalShipAttacked = 0;
     let totalShipSunked = 0;
-
-    PlayerShips &&
+    if (PlayerShips && PlayerShips.length > 0) {
       PlayerShips.forEach((ship) => {
+        console.log("ship.attackedBlocks.length", ship.attackedBlocks.length);
         if (ship.shipName !== "miss") {
           totalDeployedShips++;
           totalShipAttacked = ship.attackedBlocks.length;
@@ -30,13 +30,15 @@ const index = ({ playerDeployedShips, computerDeployedShips }) => {
           }
         }
       });
+    }
+
     return {
       totalDeployedShips,
       totalShipAttacked,
       totalShipSunked
     };
   };
-  console.log({ computerStats });
+
   const statsInfo = (stats) => {
     return (
       <ul className="game__stats">
