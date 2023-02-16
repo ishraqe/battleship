@@ -27,6 +27,6 @@
 @media only screen and (max-width: 992px) {
   .battleship__content {
     flex-direction: column;
-    margin-left: -200px;
+    margin-left: -250px;
   }
 }
