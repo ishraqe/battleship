@@ -1,0 +1,22 @@
+.summary__game--status {
+  display: flex;
+  border: 1px solid #777;
+  align-items: center;
+  justify-content: center;
+}
+
+.player__info {
+  text-align: center;
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+}
+.player__info:not(:last-child) {
+  border-right: 1px solid #777;
+}
+.player__info h5 {
+  flex: 1;
+}
+.game__stats {
+  padding: 4px;
+}

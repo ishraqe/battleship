@@ -39,7 +39,9 @@ const Battleship = () => {
 
   useEffect(() => {
     if (hasGameStarted && currentPlayer === CURRENT_PLAYER.computer) {
-      attackOnPlayerBoardByComputer();
+      setTimeout(() => {
+        attackOnPlayerBoardByComputer();
+      }, [200]);
     }
   }, [hasGameStarted, currentPlayer]);
 
@@ -257,13 +259,11 @@ const Battleship = () => {
       setPlayerDeployedShips(newDeployedArr);
     }
 
-    setTimeout(() => {
-      setCurrentPlayer(
-        currentPlayer === CURRENT_PLAYER.player
-          ? CURRENT_PLAYER.computer
-          : CURRENT_PLAYER.player
-      );
-    }, [200]);
+    setCurrentPlayer(
+      currentPlayer === CURRENT_PLAYER.player
+        ? CURRENT_PLAYER.computer
+        : CURRENT_PLAYER.player
+    );
   };
 
   return (
@@ -272,6 +272,8 @@ const Battleship = () => {
       <Summary
         hasGameStarted={hasGameStarted}
         playerAvailableShips={playerAvailableShips}
+        playerDeployedShips={playerDeployedShips}
+        computerDeployedShips={computerDeployedShips}
         handleGameStart={handleGameStart}
         currentPlayer={currentPlayer}
       />
