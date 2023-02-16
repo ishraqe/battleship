@@ -215,9 +215,10 @@ const Battleship = () => {
   const startAttackNow = () => {
     let timerInterval;
     Swal.fire({
-      title: "Attack",
+      title:
+        "Put the force at weapons posture one, warning red, weapons tight, Admiral",
       html: "You can attack in <b></b> seconds.",
-      timer: 3000,
+      timer: 5000,
       timerProgressBar: true,
       didOpen: () => {
         Swal.showLoading();
