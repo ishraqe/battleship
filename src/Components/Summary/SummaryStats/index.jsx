@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "./SummaryStats.css";
-import { CURRENT_PLAYER } from "../../../utils/DB";
 
 const index = ({ playerDeployedShips, computerDeployedShips }) => {
   const [playerStats, setPlayerStats] = useState(null);
@@ -19,12 +18,15 @@ const index = ({ playerDeployedShips, computerDeployedShips }) => {
     let totalDeployedShips = 0;
     let totalShipAttacked = 0;
     let totalShipSunked = 0;
+
     if (PlayerShips && PlayerShips.length > 0) {
       PlayerShips.forEach((ship) => {
-        console.log("ship.attackedBlocks.length", ship.attackedBlocks.length);
         if (ship.shipName !== "miss") {
           totalDeployedShips++;
-          totalShipAttacked = ship.attackedBlocks.length;
+          totalShipAttacked =
+            ship.attackedBlocks.length > 0
+              ? totalShipAttacked + 1
+              : totalShipAttacked;
           if (ship.isShipSunk) {
             totalShipSunked++;
           }

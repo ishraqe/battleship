@@ -4,9 +4,11 @@ import { CURRENT_PLAYER } from "../../../utils/DB";
 
 const BoardSquare = ({ onClick, isOcupiedCheck, boardOwner, divId }) => {
   const { isOcupied, shipName, isShipSunk, isAttacked } = isOcupiedCheck;
-
+  let missBlock = false;
   let boardAttackDeployClass = "";
+
   if (shipName === "miss") {
+    missBlock = true;
     boardAttackDeployClass = "miss";
   } else if (isShipSunk) {
     boardAttackDeployClass = "ship-sunk";
@@ -20,7 +22,14 @@ const BoardSquare = ({ onClick, isOcupiedCheck, boardOwner, divId }) => {
   return (
     <div
       id={divId}
-      onClick={() => (isShipSunk || isAttacked ? null : onClick())}
+      onClick={() => {
+        if (isShipSunk || isAttacked || missBlock) {
+          return;
+        }
+
+        onClick();
+      }}
+      disabled={isShipSunk || isAttacked || missBlock}
       className={`board__square ${boardAttackDeployClass}`}
     ></div>
   );

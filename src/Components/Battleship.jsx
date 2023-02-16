@@ -83,11 +83,12 @@ const Battleship = () => {
     return { isAllSunk, winner };
   };
   const resetGame = () => {
+    setPlayerAvailableShips(SHIPS);
+    setComputerAvailableShips(SHIPS);
+
     setSelectedShipToPlace(null);
     setCurrentPlayer(CURRENT_PLAYER.player);
     setHasGameStarted(false);
-    setPlayerAvailableShips(SHIPS);
-    setComputerAvailableShips(SHIPS);
     setPlayersSelectedAxis(AXIS.horizontal);
     setPlayerDeployedShips([]);
     setComputerDeployedShips([]);
@@ -171,13 +172,17 @@ const Battleship = () => {
   };
 
   const handleGameStart = () => {
-    setHasGameStarted(true);
-    deployShipsForComputer();
+    if (hasGameStarted) {
+      Swal.fire("Are you sure to restart the game").then(() => resetGame());
+    } else {
+      setHasGameStarted(true);
+      deployShipsForComputer();
+    }
   };
 
   // randomly deploy ships on the board
   const deployShipsForComputer = () => {
-    let tempAvShip = computerAvailableShips;
+    let tempAvShip = [...computerAvailableShips];
     let tempDeployedArr = [];
     while (tempAvShip?.length > 0) {
       const isHorizontal = Math.random() < 0.5 ? true : false; // ?
@@ -203,7 +208,33 @@ const Battleship = () => {
     if (tempDeployedArr.length === 4) {
       setComputerAvailableShips([]);
       setComputerDeployedShips(tempDeployedArr);
+      startAttackNow();
     }
+  };
+
+  const startAttackNow = () => {
+    let timerInterval;
+    Swal.fire({
+      title: "Attack",
+      html: "You can attack in <b></b> seconds.",
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const b = Swal.getHtmlContainer().querySelector("b");
+        timerInterval = setInterval(() => {
+          b.textContent = Math.floor(Swal.getTimerLeft() / 1000);
+        }, 100);
+      },
+      willClose: () => {
+        clearInterval(timerInterval);
+      }
+    }).then((result) => {
+      /* Read more about handling dismissals below */
+      if (result.dismiss === Swal.DismissReason.timer) {
+        console.log("I was closed by the timer");
+      }
+    });
   };
 
   const handleMissileAttackOnBoard = (rowIndex, columnIndex, clickedShip) => {
