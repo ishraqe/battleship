@@ -123,7 +123,6 @@ const Battleship = () => {
 
     if (selectedShipToPlace) {
       const isHorizontal = playersSelectedAxis === AXIS.horizontal;
-
       if (
         hasEnoughBlocksToDeploy(
           isHorizontal,
