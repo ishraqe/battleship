@@ -39,7 +39,7 @@ const index = ({
             <span className="ins">Attack missed the ship</span>
           </li>
           <li>
-            <span className="hit"></span>{" "}
+            <span className="hit"></span>
             <span className="ins">Attack was a hit</span>
           </li>
           <li>
