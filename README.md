@@ -1,7 +1,9 @@
 ## Battleship!
 
-![Preview](./public/assets/images/git/main.png)
-![Preview](./public/assets/images/git/game.png)
+Click this link to open the game: [Demo url](https://battleship-ish.netlify.app/)
+
+![Preview](./src/assets/images/git/main.png)
+![Preview](./src/assets/images/git/game.png)
 
 ## Motivation!
 
