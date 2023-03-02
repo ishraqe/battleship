@@ -1,6 +1,6 @@
 ## Battleship!
 
-Click this link to open the game: [Demo url](https://battleship-ish.netlify.app/){:target="\_blank" rel="noopener"}
+Click this link to open the game: [Demo url](https://battleship-ish.netlify.app/)
 
 ![Preview](./public/assets/images/git/main.png)
 ![Preview](./public/assets/images/git/game.png)
