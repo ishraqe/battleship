@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import Swal from "sweetalert2";
+
+import StartPage from "./startPage";
 
 import Axis from "./Axis";
 import Board from "./Board";
 import Inventory from "./Inventory";
 import TitleBar from "./TitleBar";
 import Summary from "./Summary";
+import Sound from "./Sound";
 
 import "./Battleship.css";
-import { SHIPS, AXIS, CURRENT_PLAYER } from "../utils/DB";
+import { SHIPS, AXIS, CURRENT_PLAYER, MISS_HIT } from "../utils/DB";
 import {
   hasEnoughBlocksToDeploy,
   getOccupiableBlocks,
@@ -22,6 +25,7 @@ import {
 
 const Battleship = () => {
   // comon states
+  const [openGame, setOpenGame] = useState(false);
   const [selectedShipToPlace, setSelectedShipToPlace] = useState(null);
   const [currentPlayer, setCurrentPlayer] = useState(CURRENT_PLAYER.player);
   const [hasGameStarted, setHasGameStarted] = useState(false);
@@ -37,6 +41,11 @@ const Battleship = () => {
   const [computerAvailableShips, setComputerAvailableShips] = useState(SHIPS);
   const [computerDeployedShips, setComputerDeployedShips] = useState([]);
 
+  const sunkSoundRef = useRef(null);
+  const clickSoundRef = useRef(null);
+  const lossSoundRef = useRef(null);
+  const winSoundRef = useRef(null);
+
   useEffect(() => {
     if (hasGameStarted && currentPlayer === CURRENT_PLAYER.computer) {
       setTimeout(() => {
@@ -46,31 +55,59 @@ const Battleship = () => {
   }, [hasGameStarted, currentPlayer]);
 
   useEffect(() => {
-    const checkForWinner = (ships, player) => {
-      const { isAllSunk, winner } = getWinner(ships, player);
-      if (isAllSunk) {
-        Swal.fire(`Winner is ${winner}`).then(() => resetGame());
-      }
-    };
-
     if (hasGameStarted) {
       checkForWinner(computerDeployedShips, CURRENT_PLAYER.computer);
       checkForWinner(playerDeployedShips, CURRENT_PLAYER.player);
     }
   }, [hasGameStarted, computerDeployedShips, playerDeployedShips]);
 
+  const checkForWinner = (ships, player) => {
+    const { isAllSunk, winner } = getWinner(ships, player);
+    if (isAllSunk) {
+      playSound(winner === "Player" ? "win" : "lose");
+      Swal.fire(`Winner is ${winner}`).then(() => resetGame());
+    }
+  };
+
+  const stopSound = (sound) => {
+    sound.current.pause();
+    sound.current.currentTime = 0;
+  };
+
+  const playSound = (sound) => {
+    if (sound === "sunk") {
+      stopSound(sunkSoundRef);
+      sunkSoundRef.current.play();
+    }
+
+    if (sound === "click") {
+      stopSound(clickSoundRef);
+      clickSoundRef.current.play();
+    }
+
+    if (sound === "lose") {
+      stopSound(lossSoundRef);
+      lossSoundRef.current.play();
+    }
+
+    if (sound === "win") {
+      stopSound(winSoundRef);
+      winSoundRef.current.play();
+    }
+  };
+
   const getWinner = (deployedShips, boardOwner) => {
     let winner = "";
     let isAllSunk = false;
     if (deployedShips && deployedShips.length > 0) {
-      let winnerLength = 0;
+      let winnersShipsNumber = 0;
       deployedShips.forEach((ship) => {
         if (ship.isShipSunk) {
-          winnerLength++;
+          winnersShipsNumber++;
         }
       });
 
-      if (winnerLength === 4) {
+      if (winnersShipsNumber === SHIPS.length) {
         isAllSunk = true;
         if (boardOwner === CURRENT_PLAYER.player) {
           winner = "Computer";
@@ -115,58 +152,63 @@ const Battleship = () => {
   const onClickBoradSquare = ({ rowIndex, columnIndex, clickedShip }) => {
     if (hasGameStarted) {
       if (currentPlayer === CURRENT_PLAYER.player) {
+        playSound("click");
         handleMissileAttackOnBoard(rowIndex, columnIndex, clickedShip);
       }
 
       return;
     }
-
-    if (selectedShipToPlace) {
-      const isHorizontal = playersSelectedAxis === AXIS.horizontal;
-      if (
-        hasEnoughBlocksToDeploy(
-          isHorizontal,
-          selectedShipToPlace.shipLength,
-          rowIndex,
-          columnIndex
-        )
-      ) {
-        const occupiedBlocks = getOccupiableBlocks(
-          isHorizontal,
-          rowIndex,
-          columnIndex,
-          selectedShipToPlace.shipLength
-        );
-
-        if (
-          isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)
-            .isPlaceTaken
-        ) {
-          Swal.fire("Block already taken!!");
-          return;
-        }
-        const deployableShipObj = {
-          shipName: selectedShipToPlace.name,
-          shipLength: selectedShipToPlace.shipLength,
-          occupiedBlocks,
-          isHorizontal,
-          currentPlayer,
-          attackedBlocks: [],
-          isShipSunk: false
-        };
-        setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
-
-        const newPlayerAvailableShips = playerAvailableShips.filter(
-          (ship) => ship.name !== selectedShipToPlace.name
-        );
-
-        setPlayerAvailableShips(newPlayerAvailableShips);
-        setSelectedShipToPlace(null);
-      } else {
-        Swal.fire("Can not place ship here!!");
-      }
+    if (!hasGameStarted && playerDeployedShips.length === SHIPS.length) {
+      Swal.fire("Its time to fire the missiles captain");
     } else {
-      Swal.fire("Please select your ship first!!");
+      if (selectedShipToPlace) {
+        const isHorizontal = playersSelectedAxis === AXIS.horizontal;
+        if (
+          hasEnoughBlocksToDeploy(
+            isHorizontal,
+            selectedShipToPlace.shipLength,
+            rowIndex,
+            columnIndex
+          )
+        ) {
+          const occupiedBlocks = getOccupiableBlocks(
+            isHorizontal,
+            rowIndex,
+            columnIndex,
+            selectedShipToPlace.shipLength
+          );
+
+          if (
+            isPlaceTakenByOtherShip(playerDeployedShips, occupiedBlocks)
+              .isPlaceTaken
+          ) {
+            Swal.fire("Block already taken!!");
+            return;
+          }
+          const deployableShipObj = {
+            shipName: selectedShipToPlace.name,
+            shipLength: selectedShipToPlace.shipLength,
+            occupiedBlocks,
+            isHorizontal,
+            currentPlayer,
+            attackedBlocks: [],
+            isShipSunk: false
+          };
+          setPlayerDeployedShips([...playerDeployedShips, deployableShipObj]);
+
+          const newPlayerAvailableShips = playerAvailableShips.filter(
+            (ship) => ship.name !== selectedShipToPlace.name
+          );
+
+          setPlayerAvailableShips(newPlayerAvailableShips);
+          setSelectedShipToPlace(null);
+          playSound("click");
+        } else {
+          Swal.fire("Can not place ship here!!");
+        }
+      } else {
+        Swal.fire("Please select your ship first!!");
+      }
     }
   };
 
@@ -232,7 +274,6 @@ const Battleship = () => {
     }).then((result) => {
       /* Read more about handling dismissals below */
       if (result.dismiss === Swal.DismissReason.timer) {
-        console.log("I was closed by the timer");
       }
     });
   };
@@ -255,16 +296,25 @@ const Battleship = () => {
     }
     if (targetShipName !== "") {
       newDeployedArr = targetBoardShips.map((ship) => {
-        if (ship.shipName === targetShipName) {
+        if (ship?.shipName === targetShipName) {
           if (ship.attackedBlocks.length > 0) {
             if (ship.attackedBlocks.includes(cordinationXY)) {
               return;
             }
             const newAttackedBlocks = [...ship.attackedBlocks, cordinationXY];
+            const isShipSunk = isArraysEqual(
+              newAttackedBlocks,
+              ship.occupiedBlocks
+            );
+
+            if (isShipSunk) {
+              playSound("sunk");
+            }
+
             return {
               ...ship,
               attackedBlocks: newAttackedBlocks,
-              isShipSunk: isArraysEqual(newAttackedBlocks, ship.occupiedBlocks)
+              isShipSunk
             };
           } else {
             return {
@@ -280,7 +330,7 @@ const Battleship = () => {
     } else {
       newDeployedArr = [
         ...targetBoardShips,
-        { shipName: "miss", attackedBlocks: [`${rowIndex}${columnIndex}`] }
+        { shipName: MISS_HIT, attackedBlocks: [`${rowIndex}${columnIndex}`] }
       ];
     }
 
@@ -296,9 +346,17 @@ const Battleship = () => {
         : CURRENT_PLAYER.player
     );
   };
-
+  if (!openGame) {
+    return <StartPage onClick={() => setOpenGame(true)} />;
+  }
   return (
     <div className="battleship__stage">
+      <Sound
+        sunkSoundRef={sunkSoundRef}
+        clickSoundRef={clickSoundRef}
+        lossSoundRef={lossSoundRef}
+        winSoundRef={winSoundRef}
+      />
       <TitleBar />
       <Summary
         hasGameStarted={hasGameStarted}
@@ -313,7 +371,6 @@ const Battleship = () => {
         <div className="battleship__content--board">
           <div className="battleship__content--board--wrapper">
             <h1>Player Board</h1>
-
             <div className="battleship__content--board--container">
               <Axis direction="row" />
               <Axis direction="column" />

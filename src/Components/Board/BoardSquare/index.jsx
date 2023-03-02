@@ -1,20 +1,20 @@
 import React from "react";
 import "./BoardSquare.css";
-import { CURRENT_PLAYER } from "../../../utils/DB";
+import { CURRENT_PLAYER, MISS_HIT } from "../../../utils/DB";
 
 const BoardSquare = ({ onClick, isOcupiedCheck, boardOwner, divId }) => {
   const { isOcupied, shipName, isShipSunk, isAttacked } = isOcupiedCheck;
   let missBlock = false;
   let boardAttackDeployClass = "";
 
-  if (shipName === "miss") {
+  if (shipName === MISS_HIT) {
     missBlock = true;
     boardAttackDeployClass = "miss";
   } else if (isShipSunk) {
     boardAttackDeployClass = "ship-sunk";
   } else if (!isShipSunk && isAttacked) {
     boardAttackDeployClass = "hit";
-  } else if (shipName !== "miss" && isOcupied) {
+  } else if (shipName !== MISS_HIT && isOcupied) {
     boardAttackDeployClass =
       boardOwner === CURRENT_PLAYER.computer ? "" : shipName;
   }

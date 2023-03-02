@@ -1,4 +1,4 @@
-import { BOARD_ARR } from "../utils/DB";
+import { BOARD_ARR, MISS_HIT } from "../utils/DB";
 
 export const hasEnoughBlocksToDeploy = (
   isHorizontal,
@@ -58,7 +58,7 @@ export const isPlaceTakenByOtherShip = (deployedShips, occupiedBlocks) => {
     deployedShips.forEach((ship) => {
       ship.occupiedBlocks.forEach((block) => {
         if (occupiedBlocks.includes(block)) {
-          shipName = ship.shipName;
+          shipName = ship?.shipName;
           isPlaceTaken = true;
           return;
         }
@@ -130,7 +130,7 @@ export const checkIfAttackBlockHasTheSameShipAndIndex = (
 export const getShipNameByCoordinates = (deployedShips, coordinates) => {
   let shipName = "";
   deployedShips.forEach((ship) => {
-    if (ship.shipName !== "miss") {
+    if (ship?.shipName !== MISS_HIT) {
       ship.occupiedBlocks.forEach((block) => {
         if (block === coordinates) {
           shipName = ship.shipName;

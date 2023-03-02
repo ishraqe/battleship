@@ -3,16 +3,7 @@ import PropTypes, { object } from "prop-types";
 
 import "./Board.css";
 import BoardSquare from "./BoardSquare";
-import { BOARD_ARR, CURRENT_PLAYER } from "../../utils/DB";
-//
-
-// attackedBlocks: ['03', '04', '05']
-// currentPlayer: "Computer"
-// isHorizontal: false
-// isShipSunk: true
-// occupiedBlocks: ['03', '04', '05']
-// shipLength: 3
-// shipName: "cruiser"
+import { BOARD_ARR, CURRENT_PLAYER, MISS_HIT } from "../../utils/DB";
 
 const Board = ({
   onClickBoradSquare,
@@ -28,17 +19,20 @@ const Board = ({
     const currentRowColumnIndex = `${rowIndex}${columnIndex}`;
     deployedShips &&
       deployedShips.forEach((ship) => {
+        if (!ship?.shipName) {
+          return;
+        }
         if (
-          ship.shipName === "miss" &&
+          ship?.shipName === MISS_HIT &&
           currentRowColumnIndex === ship.attackedBlocks.join()
         ) {
-          shipName = "miss";
+          shipName = MISS_HIT;
         } else if (
-          ship.shipName !== "miss" &&
+          ship?.shipName !== MISS_HIT &&
           ship.occupiedBlocks.includes(currentRowColumnIndex)
         ) {
           flag = true;
-          shipName = ship.shipName;
+          shipName = ship?.shipName;
           isShipSunk = ship.isShipSunk ? true : false;
           isAttacked = ship.attackedBlocks.includes(currentRowColumnIndex)
             ? true

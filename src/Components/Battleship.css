@@ -5,7 +5,6 @@
 
 .battleship__content {
   margin-left: 10px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,6 +15,7 @@
   flex: 0 0 45%;
   height: 100%;
 }
+
 .battleship__content--board--wrapper {
   height: 100%;
   display: flex;
@@ -28,5 +28,8 @@
   .battleship__content {
     flex-direction: column;
     margin-left: -250px;
+  }
+  .battleship__content--board:last-child {
+    margin-top: 20%;
   }
 }

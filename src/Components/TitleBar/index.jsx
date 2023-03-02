@@ -4,7 +4,7 @@ import "./TitleBar.css";
 const TitleBar = () => {
   return (
     <div className="battleship__titlebar">
-      <img src="../assets/images/logo.svg" width="100px" />
+      <h5>Battle Ship</h5>
     </div>
   );
 };

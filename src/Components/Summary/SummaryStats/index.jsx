@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./SummaryStats.css";
+import { MISS_HIT } from "../../../utils/DB";
 
 const index = ({ playerDeployedShips, computerDeployedShips }) => {
   const [playerStats, setPlayerStats] = useState(null);
@@ -21,7 +22,7 @@ const index = ({ playerDeployedShips, computerDeployedShips }) => {
 
     if (PlayerShips && PlayerShips.length > 0) {
       PlayerShips.forEach((ship) => {
-        if (ship.shipName !== "miss") {
+        if (ship?.shipName !== MISS_HIT) {
           totalDeployedShips++;
           totalShipAttacked =
             ship.attackedBlocks.length > 0

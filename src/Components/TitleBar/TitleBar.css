@@ -1,15 +1,17 @@
 .battleship__titlebar {
-    position: absolute;
-    width: 100vw;
-    height: 40px;
-    background-color: #0D2038;
-    left: 0px;
-    top: 0px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  position: absolute;
+  width: 100vw;
+  height: 40px;
+  background-color: #0d2038;
+  left: 0px;
+  top: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
-.battleship__titlebar img {
-    margin-left: 10px;
+.battleship__titlebar h5 {
+  color: #fff;
+  font-size: 20px;
 }
