@@ -1,38 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Battleship!
 
-## Getting Started
+![Preview](./public/assets/images/git/main.png)
+![Preview](./public/assets/images/git/game.png)
 
-First, run the development server:
+## Motivation!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+This is a game i built when i was interviewing with a company as per their assesment requirement. This is just the basic things that works , but there are lot of places the game can be improved. Feel free to fork and update and modify the game in your own way
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Requirement!
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Build a simple React-based version of the game Battleship. Introduce other libraries for state management, styling, etc as you see necessary.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+In Battleship we have a board which is a 10x10 grid, where the rows are labeled with a letter (A-J), and the columns with a number (1-10). There are different types of ships which each take up a different number of spaces on this grid, and the number of spaces a ship takes up is equivalent to how many hits the ship can take before sinking. So for a battleship, it takes up 4 spaces on the board, and can be hit 4 times before sinking. The players place their ships on the board in a random configuration, and then in turns, announce a square (for instance C3) where they will attack. If any of the opponent's ships are on that square, that ship will take one hit. Once a ship has a hit on each space it takes up, it will sink. Once a player's ships are all sunk, they lose.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+We give you a basic board setup and an 'inventory' of 4 ships as follows for yourself and for the 'computer' player:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- 1 carrier: size 5 spaces for hits
 
-## Learn More
+- 1 battleship: size 4 spaces for hits
 
-To learn more about Next.js, take a look at the following resources:
+- 1 cruiser: size 3 spaces for hits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 1 destroyer: size 2 spaces for hits
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Made with ♥ by [Anamul Haque](https://twitter.com/ishraqe_manjur)
